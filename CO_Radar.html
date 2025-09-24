@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Radar CO Dashboard</title>
+    <style>
+        body { background: black; color: white; font-family: monospace; text-align: center; margin: 0; padding: 0; height: 100vh; overflow: hidden; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 100vw; }
+        .grid:first-child { height: 45vh; }
+        .grid:last-child { height: 45vh; }
+        .imagecontainer { position: relative; width: 100%; margin: 0; padding: 0; min-height: 40vh; background: #333; border: 1px solid #555; display: flex; flex-direction: column; justify-content: center; }
+        img { width: 100%; max-width: 100%; max-height: 35vh; object-fit: contain; display: block; margin: auto; }
+        .imagetitle { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); background: black; padding: 3px; font-size: 1rem; white-space: nowrap; z-index: 10; }
+        .error { color: red; font-size: 0.9rem; padding: 5px; text-align: center; }
+        #clock { position: fixed; bottom: 0; left: 0; right: 0; background: darkslategray; padding: 5px; height: 5vh; display: flex; align-items: center; justify-content: center; }
+        #date { font-size: 1rem; color: white; }
+        #utc { font-size: 1.2rem; color: yellow; }
+        #local { font-size: 1rem; color: lightsalmon; }
+        #buttons { position: fixed; bottom: 5vh; left: 0; right: 0; background: darkslategray; padding: 5px; height: 5vh; display: flex; align-items: center; justify-content: center; gap: 5px; overflow-x: auto; }
+        button { font-size: 0.8rem; min-width: 80px; background: springgreen; border: none; color: black; padding: 5px; }
+        @media (max-width: 600px) {
+            .grid:first-child { height: 40vh; }
+            .grid:last-child { height: 40vh; }
+            .imagecontainer { min-height: 35vh; }
+            img { max-height: 30vh; }
+            .imagetitle { font-size: 0.8rem; }
+            #date, #local { font-size: 0.8rem; }
+            #utc { font-size: 1rem; }
+            button { font-size: 0.7rem; min-width: 70px; }
+        }
+    </style>
+    <script>
+        function showTime() {
+            const offset = 6; // UTC offset for Colorado (MDT = -6)
+            const now = new Date();
+            const utcTime = new Date(now.getTime() + offset * 3600000);
+            const localTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const utcStr = utcTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            document.getElementById('date').innerText = now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+            document.getElementById('utc').innerText = `UTC ${utcStr}`;
+            document.getElementById('local').innerText = localTime;
+            setTimeout(showTime, 1000);
+        }
+        window.onload = showTime;
+    </script>
+</head>
+<body>
+    <div class="grid">
+        <div class="imagecontainer">
+            <img src="https://droughtmonitor.unl.edu/data/png/current/current_co_none.png" alt="Drought">
+            <div class="imagetitle">CO Drought</div>
+        </div>
+        <div class="imagecontainer">
+            <img src="https://radar.weather.gov/ridge/standard/KFTG_loop.gif" alt="Radar">
+            <div class="imagetitle">CO RADAR</div>
+        </div>
+        <div class="imagecontainer">
+            <img src="https://www.wpc.ncep.noaa.gov/noaa/noaa.gif" alt="Forecast">
+        </div>
+    </div>
+    <div class="grid">
+        <div class="imagecontainer">
+            <img src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/np/GEOCOLOR/GOES18-NP-GEOCOLOR-900x540.gif" alt="GOES NP">
+        </div>
+        <div class="imagecontainer">
+            <img src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/wus/GEOCOLOR/GOES18-WUS-GEOCOLOR-1000x1000.gif" alt="GOES WUS">
+        </div>
+        <div class="imagecontainer">
+            <img src="https://cdn.star.nesdis.noaa.gov/GOES16/GLM/CONUS/EXTENT3/GOES16-CONUS-EXTENT3-625x375.gif" alt="GOES GLM">
+        </div>
+    </div>
+    <div id="clock">
+        <span id="date"></span> &nbsp; <span id="utc"></span> &nbsp; <span id="local"></span>
+    </div>
+    <div id="buttons">
+        <button onclick="window.open('https://www.arapahoebasin.com/mountain-cams/')">Abasin Cams</button>
+        <button onclick="window.open('https://www.coppercolorado.com/the-mountain/webcams?season=summer')">Copper Cams</button>
+        <button onclick="window.open('https://forecast.weather.gov/MapClick.php?lon=-106.16377257462592&lat=39.48701208217648')">Copper MTN 12,000FT</button>
+        <button onclick="window.open('https://www.ospo.noaa.gov/products/atmosphere/sfr/index.html')">WRLD SNOWFALL</button>
+        <button onclick="window.open('https://www.wcc.nrcs.usda.gov/ftpref/support/states/CO/products/#state=co&element=wteq')">CO SNOWPACK</button>
+        <button onclick="window.open('https://www.weather.gov/bou/co_snowpack')">CO SNOWDEPTH</button>
+    </div>
+</body>
+</html>
