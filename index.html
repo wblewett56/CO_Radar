@@ -10,7 +10,7 @@
         .grid:first-child { height: 45vh; }
         .grid:last-child { height: 45vh; }
         .imagecontainer { position: relative; width: 100%; margin: 0; padding: 0; min-height: 40vh; background: #333; border: 1px solid #555; display: flex; flex-direction: column; justify-content: center; }
-        img { width: 100%; max-width: 100%; max-height: 35vh; object-fit: contain; display: block; margin: auto; }
+        img { width: 100%; max-width: 100%; max-height: 35vh; object-fit: contain; display: block; margin: auto; cursor: pointer; }
         .imagetitle { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); background: black; padding: 3px; font-size: 1rem; white-space: nowrap; z-index: 10; }
         .error { color: red; font-size: 0.9rem; padding: 5px; text-align: center; }
         #clock { position: fixed; bottom: 0; left: 0; right: 0; background: darkslategray; padding: 5px; height: 5vh; display: flex; align-items: center; justify-content: center; }
@@ -29,6 +29,22 @@
             #utc { font-size: 1rem; }
             button { font-size: 0.7rem; min-width: 70px; }
         }
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .fullscreen-image {
+            max-width: 90%;
+            max-height: 90%;
+        }
     </style>
     <script>
         function showTime() {
@@ -43,31 +59,46 @@
             setTimeout(showTime, 1000);
         }
         window.onload = showTime;
+
+        function showFullScreen(imageSrc) {
+            const overlay = document.createElement('div');
+            overlay.className = 'fullscreen-overlay';
+            const img = document.createElement('img');
+            img.className = 'fullscreen-image';
+            img.src = imageSrc;
+            img.onclick = () => document.body.removeChild(overlay); // Close on image click
+            overlay.appendChild(img);
+            document.body.appendChild(overlay);
+            overlay.style.display = 'flex';
+            overlay.onclick = (e) => {
+                if (e.target === overlay) document.body.removeChild(overlay); // Close on overlay click
+            };
+        }
     </script>
 </head>
 <body>
     <div class="grid">
         <div class="imagecontainer">
-            <img src="https://droughtmonitor.unl.edu/data/png/current/current_co_none.png" alt="Drought">
+            <img src="https://droughtmonitor.unl.edu/data/png/current/current_co_none.png" alt="Drought" onclick="showFullScreen(this.src)">
             <div class="imagetitle">CO Drought</div>
         </div>
         <div class="imagecontainer">
-            <img src="https://radar.weather.gov/ridge/standard/KFTG_loop.gif" alt="Radar">
+            <img src="https://radar.weather.gov/ridge/standard/KFTG_loop.gif" alt="Radar" onclick="showFullScreen(this.src)">
             <div class="imagetitle">CO RADAR</div>
         </div>
         <div class="imagecontainer">
-            <img src="https://www.wpc.ncep.noaa.gov/noaa/noaa.gif" alt="Forecast">
+            <img src="https://www.wpc.ncep.noaa.gov/noaa/noaa.gif" alt="Forecast" onclick="showFullScreen(this.src)">
         </div>
     </div>
     <div class="grid">
         <div class="imagecontainer">
-            <img src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/np/GEOCOLOR/GOES18-NP-GEOCOLOR-900x540.gif" alt="GOES NP">
+            <img src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/np/GEOCOLOR/GOES18-NP-GEOCOLOR-900x540.gif" alt="GOES NP" onclick="showFullScreen(this.src)">
         </div>
         <div class="imagecontainer">
-            <img src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/wus/GEOCOLOR/GOES18-WUS-GEOCOLOR-1000x1000.gif" alt="GOES WUS">
+            <img src="https://cdn.star.nesdis.noaa.gov/GOES18/ABI/SECTOR/wus/GEOCOLOR/GOES18-WUS-GEOCOLOR-1000x1000.gif" alt="GOES WUS" onclick="showFullScreen(this.src)">
         </div>
         <div class="imagecontainer">
-            <img src="https://cdn.star.nesdis.noaa.gov/GOES16/GLM/CONUS/EXTENT3/GOES16-CONUS-EXTENT3-625x375.gif" alt="GOES GLM">
+            <img src="https://cdn.star.nesdis.noaa.gov/GOES16/GLM/CONUS/EXTENT3/GOES16-CONUS-EXTENT3-625x375.gif" alt="GOES GLM" onclick="showFullScreen(this.src)">
         </div>
     </div>
     <div id="clock">
